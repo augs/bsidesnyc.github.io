@@ -24,7 +24,7 @@ function sessionizeScheduleGetDayHeading(dayNumber, daySchedule) {
       day: "numeric",
     };
 
-    const scheduleDay = new Date(daySchedule.date);
+    const scheduleDay = parseUtc(daySchedule.date);
     heading.innerText = scheduleDay.toLocaleDateString("en-US", options);
     return heading;
 }
@@ -75,20 +75,13 @@ function addSessionToSchedule(trackSlot, trackName, session, createModals, baseU
     }
 
     session.speakers.forEach(speaker => {
+        /*
+         * No photo here by design - the grid view stays text-only so it
+         * loads fast on mobile. Headshots only load when a speaker's
+         * modal is actually opened (see the show.bs.modal handler).
+         */
         const performer = document.createElement("li");
         performer.setAttribute("itemprop", "performer");
-
-        const speakerImage = document.createElement("img");
-        speakerImage.classList.add("speaker-img");
-        speakerImage.classList.add("flow-img");
-        speakerImage.classList.add("img-circle");
-        speakerImage.id = "speakerImage-" + speaker.id;
-        speakerImage.loading = "lazy";
-        speakerImage.decoding = "async";
-        speakerImage.alt = speaker.name || "";
-
-        performer.append(speakerImage);
-        slotSpeakers.append(performer);
 
         const speakerName = document.createElement("p");
         speakerName.classList.add("speaker-name");
@@ -99,15 +92,16 @@ function addSessionToSchedule(trackSlot, trackName, session, createModals, baseU
         speakerPosition.innerText = undefined;
 
         speakerName.append(speaker.name, speakerPosition);
-        slotSpeakers.append(speakerName);
+        performer.append(speakerName);
+        slotSpeakers.append(performer);
     });
     slotContent.append(slotSpeakers);
     trackSlot.append(slotContent);
 }
 
 function spansMultipleSlots(session, slotEndTime) {
-    const startTime = new Date(session.startsAt);
-    const endTime = new Date(session.endsAt);
+    const startTime = parseUtc(session.startsAt);
+    const endTime = parseUtc(session.endsAt);
 
     if ( endTime > slotEndTime ) {
         return true;
@@ -116,8 +110,8 @@ function spansMultipleSlots(session, slotEndTime) {
 }
 
 function carryOverExpired( session, slotStartTime, slotEndTime) {
-    const startTime = new Date(session.startsAt);
-    const endTime = new Date(session.endsAt);
+    const startTime = parseUtc(session.startsAt);
+    const endTime = parseUtc(session.endsAt);
 
     if ( startTime > slotEndTime ) {
         return true;
@@ -199,20 +193,20 @@ function sessionizeScheduleGetTimeslotElement(room, timeslotRooms, trackColWidth
 
 }
 
-function sessionizeScheduleGetTrackHeading(dayNumber, rooms) {
+function sessionizeScheduleGetTrackHeading(rooms) {
     /*
      * Header Row
      */
     const row = document.createElement("div");
     row.classList.add("timeslot");
     row.classList.add("row");
+    row.classList.add("track-header");
 
     const day = document.createElement("div");
     day.classList.add("col-12");
     day.classList.add("col-xl-2");
     day.classList.add("track-header-label");
     day.classList.add("track-header-slot");
-    day.innerText = "Day " + dayNumber;
     row.append(day);
 
 
@@ -260,7 +254,7 @@ function sessionizeScheduleGetTimeslot(rooms, timeslot, scheduleDate, slotStartT
 
     const startMinute = document.createElement("span");
     startMinute.innerText = padMinutes(slotStartTime);
-    start.append(slotStartTime.getHours(), startMinute);
+    start.append(slotStartTime.getUTCHours(), startMinute);
     time.append(start);
     row.append(time);
 
@@ -303,10 +297,8 @@ function getSlotStartEndTimes(day) {
 }
 
 function getDateTime(day, hhmmss) {
-    const [ hours, minutes, seconds ] = hhmmss.split(":");
-    const dt = new Date(day)
-    dt.setUTCHours(hours, minutes, seconds);
-    return dt;
+    const datePart = day.split("T")[0];
+    return parseUtc(datePart + "T" + hhmmss);
 }
 
 function sessionizeSchedule(scheduleGrid, baseUrl) {
@@ -332,7 +324,7 @@ function sessionizeSchedule(scheduleGrid, baseUrl) {
         scheduleTable.classList.add("schedule-table");
         //scheduleTable.classList.add("d-flex");
 
-        const dayScheduleTrackHeading = sessionizeScheduleGetTrackHeading(day, gridItem.rooms);
+        const dayScheduleTrackHeading = sessionizeScheduleGetTrackHeading(gridItem.rooms);
         scheduleTable.append(dayScheduleTrackHeading);
 
         /*
@@ -482,26 +474,21 @@ function backfillSpeakerDetails(speakers, baseUrl) {
         /*
          * Backfill items on the schedule first
          */
-        waitForElm("#speakerImage-" + speaker.id, speaker).then(([elements, speaker]) => {
-            elements.forEach(element => {
-                if ( speaker.profilePicture != null ) {
-                    element.src = speaker.profilePicture;
-                }
-            });
-        });
         waitForElm("#speakerPosition-" + speaker.id, speaker).then(([elements, speaker]) => {
             elements.forEach(element => {
                 element.innerText = speaker.tagLine;
             });
         });
 
-        /* 
-         * Backfill items on the modals
+        /*
+         * Backfill items on the modals. The headshot only gets a data-src
+         * here (never src) so it doesn't fetch until its modal is opened -
+         * see the show.bs.modal handler in scripts.js.
          */
         waitForElm("#speakerProfileUrl-" + speaker.id, speaker).then(([elements, speaker]) => {
             elements.forEach(element => {
                 if ( speaker.profilePicture != null ) {
-                    element.src = speaker.profilePicture;
+                    element.dataset.src = speaker.profilePicture;
                 }
             });
         });

@@ -3,6 +3,19 @@ function getSessionizeThumbnail(url, size) {
     return url.replace(/-\d+o\d+o\d+-/, `-${size}o${size}o1-`);
 }
 
+/*
+ * Sessionize's grid export ("Use UTC timezone for schedule") returns
+ * date/time strings with no offset (e.g. "2026-10-17T10:00:00") whose
+ * digits are the venue's actual ET wall-clock time, not real UTC. Treating
+ * them as UTC keeps every session/slot time in the same reference frame
+ * regardless of the visitor's own timezone - parse with this everywhere
+ * a Sessionize date/time string is read, and read back with getUTC*.
+ */
+function parseUtc(dateTimeStr) {
+    if (!dateTimeStr) return null;
+    return /Z$|[+-]\d\d:\d\d$/.test(dateTimeStr) ? new Date(dateTimeStr) : new Date(dateTimeStr + "Z");
+}
+
 function normalizeTrackName(trackName) {
     return trackName.replace(/\s/g, "").toLowerCase();;
 }
@@ -81,22 +94,22 @@ function getStartEndString(session) {
     if ( !session.startsAt || !session.endsAt ) {
         return "TBD";
     }
-    var start = new Date(session.startsAt);
-    var end = new Date(session.endsAt);
+    var start = parseUtc(session.startsAt);
+    var end = parseUtc(session.endsAt);
 
-    return start.getHours() +
+    return start.getUTCHours() +
         ":" +
         padMinutes(start) +
         " - " +
-        end.getHours() +
+        end.getUTCHours() +
         ":" +
         padMinutes(end);
 }
 function padMinutes(time) {
-    if ( time.getMinutes() < 10 ) {
-        return "0" + time.getMinutes();
+    if ( time.getUTCMinutes() < 10 ) {
+        return "0" + time.getUTCMinutes();
     }
-    return time.getMinutes();
+    return time.getUTCMinutes();
 
 }
 
@@ -197,8 +210,11 @@ function addSpeakerContentToModal(modalBody, speaker, baseUrl) {
     speakerHeadshot.loading = "lazy";
     speakerHeadshot.decoding = "async";
     speakerHeadshot.alt = speaker.fullName || speaker.name || "";
+    // Modals are built up front but stay hidden until clicked - stash the
+    // URL in data-src rather than src so the browser doesn't fetch it
+    // until the modal is actually opened (see show.bs.modal in scripts.js).
     if (speaker.profilePicture) {
-        speakerHeadshot.src = speaker.profilePicture;
+        speakerHeadshot.dataset.src = speaker.profilePicture;
     }
     headshot.append(speakerHeadshot);
     row.append(headshot);
