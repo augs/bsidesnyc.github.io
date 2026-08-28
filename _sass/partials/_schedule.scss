@@ -1,9 +1,12 @@
-$speaker-image-size: 40px;
 $schedule-border: 1px solid $color-border;
 $title-font-size: 25px;
 $label-width: 100px;
 $small-label-width: 80px;
  .schedule {
+    // The global `section` rule sets overflow: hidden, which breaks the
+    // sticky room header below - it needs the real viewport as its
+    // scrollport, not this section's own box.
+    overflow: visible;
     ul {
         list-style: none;
         padding: 0;
@@ -16,16 +19,8 @@ $small-label-width: 80px;
             font-size: 14px;
         }
     }
-    .speaker-img {
-        width: $speaker-image-size;
-        height: $speaker-image-size;
-        border: 2px solid #fff;
-        position: absolute;
-        box-shadow: 0 1px 0 rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .2);
-    }
     .speaker-name {
-        line-height: $speaker-image-size - 12;
-        margin-left: $speaker-image-size + 8;
+        line-height: 1.3;
     }
     .speaker-position {
         color: $color-text-secondary;
@@ -60,12 +55,13 @@ $small-label-width: 80px;
 .track-header {
     z-index: 10;
     transition: $base-transition;
-    position: sticky;
-    top: 80px; // Clear the fixed navigation header on desktop
-    @media (max-width: 1199px) {
-        top: 60px; // Adjusted for mobile header
-    }
     background: #fff;
+    // Only pin the room header on the wide grid view - on mobile it's a
+    // tall stacked block that would eat too much of the viewport if pinned.
+    @media (min-width: 1200px) {
+        position: sticky;
+        top: 80px; // Clear the fixed navigation header on desktop
+    }
     &.sticky {
         box-shadow: 0 0 5px rgba(0, 0, 0, .2), 0 1px 0 rgba(255, 255, 255, .15);
     }
@@ -121,6 +117,12 @@ $small-label-width: 80px;
 }
 .track-header-slot {
     position: relative;
+    // Flex items default to min-width: auto, which lets a cell's content
+    // (long unbreakable text, images, etc.) push that column wider than its
+    // equal-width share - and since each row is its own flex container,
+    // different rows end up with different column widths, breaking grid
+    // alignment. Force every column to honor the equal-width flex-basis.
+    min-width: 0;
     padding: 10px 15px 10px;
     text-align: left;
     transition: $base-transition;

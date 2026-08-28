@@ -20,6 +20,18 @@
             }, 800);
         }
 
+        // Speaker/session modals are built with their headshot URL stashed in
+        // data-src instead of src (see addSpeakerContentToModal) so photos
+        // don't fetch until a visitor actually opens that modal. This swaps
+        // the real src in right as a modal is about to show, and works for
+        // modals created after page load since it's delegated on document.
+        document.addEventListener('show.bs.modal', function(e) {
+            e.target.querySelectorAll('img[data-src]').forEach(img => {
+                img.src = img.dataset.src;
+                delete img.dataset.src;
+            });
+        });
+
         const windowWidth = window.innerWidth;
         if (windowWidth > 1500) {
             document.querySelectorAll('.effect-wrapper').forEach(el => el.classList.add('col-lg-3'));
