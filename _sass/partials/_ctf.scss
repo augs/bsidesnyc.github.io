@@ -1,9 +1,5 @@
 .about-ctf {
-	background-color: #fff;
-
-	h3 {
-		text-align: center;
-	}
+	@extend %card-section;
 
 	.ctf-intro {
 		text-align: center;
@@ -12,42 +8,12 @@
 		color: $color-text-secondary;
 	}
 
-	.row {
-		margin-top: 40px;
-	}
-
 	.ctf-card {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		padding: $card-padding + 6px;
-		background: $color-surface-alt;
-		border: 1px solid $color-border;
-		border-radius: $card-border-radius;
-		box-shadow: $card-shadow;
-
-		@media (max-width: 767px) {
-			padding: $card-padding;
-		}
-	}
-
-	.col-md-6 {
-		margin-bottom: 30px;
+		@extend %stacked-card;
 	}
 
 	.ctf-logo {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 80px;
-		margin-bottom: 22px;
-
-		img {
-			max-height: 100%;
-			max-width: 200px;
-			width: auto;
-			object-fit: contain;
-		}
+		@extend %stacked-card-logo;
 	}
 
 	h4 {
@@ -68,8 +34,7 @@
 	}
 
 	.ctf-card-footer {
-		margin-top: auto;
-		text-align: center;
+		@extend %stacked-card-footer;
 
 		.btn {
 			margin: 4px 4px 6px;
@@ -83,10 +48,6 @@
 	}
 
 	.ctf-learn-more {
-		display: inline-block;
-		font-weight: $fw-bold;
-		text-transform: uppercase;
-		letter-spacing: .04em;
-		font-size: 12px;
+		@extend %stacked-card-learn-more;
 	}
 }
