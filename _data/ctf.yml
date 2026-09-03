@@ -28,6 +28,10 @@
     - "\"Joes\" learn and face challenges"
     - "\"Pros\" flex their skills and help the Joes"
   registration: # No more than 2 registration buttons
+    - title: Call for Joes
+      url: https://forms.gle/DUVzRSteodxETV9U9
+    - title: Call for Pros
+      url: https://forms.gle/L94E18JTWFSL9HNS7
   registrationMessage:
   url: http://prosversusjoes.net/#bsidesnyc
 #
