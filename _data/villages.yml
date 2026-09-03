@@ -32,7 +32,12 @@
   handson: true
   description: "IoT Village advocates for advancing security in the Internet of Things (IoT) industry through bringing researchers and industry together."
 - title: "John Jay Computer Science Society"
-  url: "https://jjaycss.tech"
+  url: "https://linktr.ee/css.jjay"
   logo: "jjcss.webp"
   handson: true
   description: "The Computer Science Society is the student-run computer science and technology club at CUNY John Jay College, giving students the skills, resources, and community to grow as leaders in STEM. They'll be running hands-on, laptop-based activities at their table throughout the day."
+- title: "Blacks in Cybersecurity"
+  url: "https://www.blacksincyberconf.com"
+  logo: "bic.webp"
+  handson: false
+  description: "Blacks in Cybersecurity is a community-driven initiative working to build the pipeline of Black practitioners in cybersecurity through meetups, workshops, conferences, and CTF events. A returning BSidesNYC village, they'll be on hand to share resources and connect with attendees looking to grow in the field."
