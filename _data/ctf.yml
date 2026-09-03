@@ -34,12 +34,18 @@
 # Cloud Village
 #
 - logo: cloudvillage.webp
-  header: More Details to Come
+  header: Play All Day
   features:
-    - Cloud Village is bringing a CTF to BSidesNYC
-    - Details will be announced closer to the event
+    - Jeopardy-Style CTF
+    - Play all day or casually pick up a challenge
+    - Team-based (1 to 4 people per team)
+    - Compare your progress against others on the leaderboard
+    - Prizes and swag for winners and other top performers
   registration: # No more than 2 registration buttons
-  registrationMessage:
+    - title: Register In Person
+      url: "#"
+      disabled: true
+  registrationMessage: Registration will be in-person at the CTF space the day of event
   url: https://cloud-village.org
 #
 # Red Team Village CTF and AI Security Village (Align) removed for now - awaiting
