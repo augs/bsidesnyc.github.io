@@ -31,3 +31,8 @@
   logo: "iot.webp"
   handson: true
   description: "IoT Village advocates for advancing security in the Internet of Things (IoT) industry through bringing researchers and industry together."
+- title: "John Jay Computer Science Society"
+  url: "https://jjaycss.tech"
+  logo: "jjcss.webp"
+  handson: true
+  description: "The Computer Science Society is the student-run computer science and technology club at CUNY John Jay College, giving students the skills, resources, and community to grow as leaders in STEM. They'll be running hands-on, laptop-based activities at their table throughout the day."
