@@ -345,11 +345,14 @@ svg.fp.fp-focus {
         a { pointer-events: none; }
         .vx-how { display: none; }
         @media (min-width: 1200px) {
-            .vx-compass { margin-left: 130px; }
+            .vx-compass { margin-left: 150px; }
             .vx-floor-label {
-                flex-basis: 130px;
+                // Fixed, so a long one-word name (Mezzanine) can't widen its
+                // row and knock that floor's lane out of line
+                flex-basis: 150px;
+                max-width: 150px;
                 align-items: center;
-                .vx-name { font-size: 15px; }
+                .vx-name { font-size: 15px; overflow-wrap: anywhere; }
             }
             .vx-spot {
                 padding: 4px 3px;
