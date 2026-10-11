@@ -52,6 +52,20 @@ $small-label-width: 80px;
         border-bottom: $schedule-border;
     }
 }
+// The slot that's on now, on the day of the event (markCurrentTimeslot)
+.timeslot-now {
+    box-shadow: inset 4px 0 0 $main-color;
+    .timeslot-label::after {
+        content: "Now";
+        display: block;
+        margin-top: 6px;
+        color: $main-color;
+        font-size: 13px;
+        font-weight: $fw-extra-bold;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+    }
+}
 .track-header {
     z-index: 10;
     transition: $base-transition;

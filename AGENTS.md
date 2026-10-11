@@ -56,7 +56,7 @@ Dynamic pages fetch data via the Sessionize API using `fetch()`. The codebase us
 | File | Responsibility |
 |---|---|
 | `js/scripts.js` | Global behaviors: Sticky header (native scroll listener), IntersectionObserver for animations. |
-| `js/schedule.js` | Builds the schedule table and session modals. |
+| `js/schedule.js` | Builds the schedule table and session modals. On the event day it marks the slot that's on now and scrolls to it (test with `?now=2026-10-17T13:20`). |
 | `js/speakers.js` | Builds the speaker grid. Cards "fill in" individually as images load. |
 | `js/utils.js` | **Centralized Utilities**: Contains `createBootstrapModal`, `addSessionContentToModal`, and `addSpeakerContentToModal` to ensure UI consistency. |
 | `js/archive.js` | Video modal logic and URL parsing for the Archive page. Utilizes **Plyr.js** for unified playback. |
