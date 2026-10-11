@@ -255,10 +255,10 @@ venuePhotosSecondary:
   - 240.webp
   - L615.webp
   - L763.webp
-venueMapsIntro: "Enter on 59th St and register on the Ground floor (L), home to the Keynote and Red Track (L.63), Workshops (L.61) and the Entrepreneur Track (L.76). Take the stairs down to the Lower Level (L2) for the Blue (L2.84) and Other (L2.85) tracks. Lunch, T-shirts and sponsors are half a flight up on the Mezzanine; keep going up to Hound Square for the Career Center & Affinity Villages, then the 2nd floor for the Hands-On Villages and CTFs."
+venueMapsIntro: "Enter on 59th St and register on Floor L, the main entrance level, home to the Keynote and Red Track (L.63), Workshops (L.61) and the Entrepreneur Track (L.76). Take the stairs down to the Lower Level (L2) for the Blue (L2.84) and Other (L2.85) tracks. Lunch, T-shirts and sponsors are half a flight up on the Mezzanine; keep going up to Hound Square for the Career Center & Affinity Villages, then the 2nd floor for the Hands-On Villages and CTFs."
 # svg: clean drawing in _includes/floorplans/; image: full architectural plan in img/venue/
 venueFloorMaps:
-  - name: Ground Floor (L)
+  - name: Floor L (Main Entrance)
     divId: map-l
     image: 2025_bsidesnyc_jj_GROUND_L1-1.webp
     svg: ground.svg

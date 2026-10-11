@@ -5,4 +5,4 @@
 <g class="fp-wc"><rect x="680" y="360" width="80" height="60" rx="6"/><text x="720" y="390">WC</text></g>
 <g class="fp-room fp-tech-blue" data-room="L2.84"><rect x="540" y="245" width="160" height="90" rx="8"/><text x="620" y="278">Tech &#183; Blue</text><text class="fp-sub" x="620" y="308">L2.84</text></g>
 <g class="fp-room fp-tech-other" data-room="L2.85"><rect x="720" y="245" width="160" height="90" rx="8"/><text x="800" y="278">Tech &#183; Other</text><text class="fp-sub" x="800" y="308">L2.85</text></g>
-<g class="fp-stairs" transform="translate(822 180)"><circle r="27"/><polyline points="-14,12 -7,12 -7,5 0,5 0,-2 7,-2 7,-9 14,-9"/><text x="80">&#8593; Ground</text></g>
+<g class="fp-stairs" transform="translate(822 180)"><circle r="27"/><polyline points="-14,12 -7,12 -7,5 0,5 0,-2 7,-2 7,-9 14,-9"/><text x="80">&#8593; Floor L</text></g>

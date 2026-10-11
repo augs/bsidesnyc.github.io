@@ -66,7 +66,7 @@ function trackToRoomElements(trackName) {
             tight: "Red (L.63)",
             room: "L.63",
             divId: "map-l",
-            directions: "Ground floor, at the east end near the 59th St entrance. The large room next to Workshops (L.61)."
+            directions: "Floor L, at the east end near the 59th St entrance. The large room next to Workshops (L.61)."
         },
         "Tech - Blue": {
             heading: "Tech - Blue (L2.84)",
@@ -87,14 +87,14 @@ function trackToRoomElements(trackName) {
             tight: "Workshop (L.61)",
             room: "L.61",
             divId: "map-l",
-            directions: "Ground floor, at the east end near the 59th St entrance, next to the Keynote room (L.63)."
+            directions: "Floor L, at the east end near the 59th St entrance, next to the Keynote room (L.63)."
         },
         "Entrepreneur": {
             heading: "Entrepreneur (L.76)",
             tight: "Entrepreneur (L.76)",
             room: "L.76",
             divId: "map-l",
-            directions: "Ground floor. Head west along the main concourse, away from the entrance; L.76 is past the Mezzanine stairs and the first restrooms."
+            directions: "Floor L. Head west along the main concourse, away from the entrance; L.76 is past the Mezzanine stairs and the first restrooms."
         }
     }
     if ( mapping.hasOwnProperty(trackName) ) {
@@ -422,9 +422,10 @@ function showRoomMap(trackName, fromModal) {
                 // Floors are listed top to bottom, so a higher index is further down
                 const levels = targetIdx - entranceIdx;
                 const count = Math.abs(levels) === 1 ? "one level" : Math.abs(levels) + " levels";
-                floor.append(" \u00b7 " + (levels === 0
-                    ? "same level as the entrance"
-                    : count + (levels > 0 ? " down" : " up") + " from the entrance"));
+                // On the entrance floor its name already says so
+                if ( levels !== 0 ) {
+                    floor.append(" \u00b7 " + count + (levels > 0 ? " down" : " up") + " from the entrance");
+                }
             }
         }
     }

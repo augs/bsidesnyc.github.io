@@ -35,13 +35,13 @@ floors:
   - name: Mezzanine
     code: "M"
     divId: map-l
-    how: Half a flight up from the Ground floor lobby.
+    how: Half a flight up from the Floor L lobby.
     stairsDown: 61.5
     spots:
       - {label: "Lunch & T-Shirts", kind: food, x: 41, w: 9}
       - {label: "Sponsors", kind: sponsor, x: 51, w: 8, link: "/sponsors/"}
 
-  - name: Ground Floor
+  - name: Floor L (Main Entrance)
     code: "L"
     divId: map-l
     how: Enter from 59th St. Registration and Info are just inside.
@@ -57,7 +57,7 @@ floors:
   - name: Lower Level
     code: "L2"
     divId: map-l2
-    how: Stairs down from the Ground floor lobby, or elevators.
+    how: Stairs down from the Floor L lobby, or elevators.
     spots:
       - {label: "Blue", room: "L2.84", kind: tech-blue, x: 40, w: 10}
       - {label: "Other", room: "L2.85", kind: tech-other, x: 51, w: 9}
