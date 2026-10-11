@@ -301,3 +301,40 @@ svg.fp {
     }
     a.fp-room:hover rect, a.fp-room:focus rect { filter: brightness(1.12); }
 }
+
+// Room-map popup (showRoomMap in js/utils.js): dim everything but the room
+svg.fp.fp-focus {
+    // Info and Registration stay lit: the directions use them as landmarks
+    .fp-room:not(.fp-target):not(.fp-info):not(.fp-registration), .fp-mezz { opacity: .3; }
+    .fp-wc, .fp-elev { opacity: .5; }
+    .fp-target rect {
+        stroke: $color-text-heading;
+        stroke-width: 5;
+        animation: fp-pulse 1.6s ease-in-out infinite;
+    }
+}
+@keyframes fp-pulse {
+    50% { stroke-width: 11; }
+}
+@media (prefers-reduced-motion: reduce) {
+    svg.fp.fp-focus .fp-target rect { animation: none; }
+}
+.room-map-modal {
+    .caption { color: $color-text-muted; }
+    .room-map-directions {
+        margin: 8px 0 14px;
+        font-size: 15px;
+    }
+    .room-map-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 14px;
+        a { margin-left: auto; }
+    }
+}
+.room-map-link {
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+}

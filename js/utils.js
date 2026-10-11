@@ -21,31 +21,45 @@ function normalizeTrackName(trackName) {
 }
 
 function trackToRoomElements(trackName) {
+    /*
+     * room must match a data-room attribute in _includes/floorplans/*.svg
+     * so the room-map popup can highlight it; divId is its floor plan.
+     */
     var mapping = {
         "Tech - Red": {
             heading: "Tech - Red (L.63)",
             tight: "Red (L.63)",
-            divId: "map-l"
+            room: "L.63",
+            divId: "map-l",
+            directions: "Ground floor, at the east end near the 59th St entrance. The large room next to Workshops (L.61)."
         },
         "Tech - Blue": {
             heading: "Tech - Blue (L2.84)",
             tight: "Blue (L2.84)",
-            divId: "map-l2"
+            room: "L2.84",
+            divId: "map-l2",
+            directions: "Take the stairs by the Info booth down to the Lower Level. L2.84 is at the bottom of the stairs, next to L2.85."
         },
         "Tech - Other": {
             heading: "Tech - Other (L2.85)",
             tight: "Other (L2.85)",
-            divId: "map-l2"
+            room: "L2.85",
+            divId: "map-l2",
+            directions: "Take the stairs by the Info booth down to the Lower Level. L2.85 is right at the bottom of the stairs, next to L2.84."
         },
         "Workshop": {
             heading: "Workshop (L.61)",
             tight: "Workshop (L.61)",
-            divId: "map-l"
+            room: "L.61",
+            divId: "map-l",
+            directions: "Ground floor, at the east end near the 59th St entrance, next to the Keynote room (L.63)."
         },
         "Entrepreneur": {
             heading: "Entrepreneur (L.76)",
             tight: "Entrepreneur (L.76)",
-            divId: "map-l"
+            room: "L.76",
+            divId: "map-l",
+            directions: "Ground floor. Head west along the main concourse, away from the entrance; L.76 is past the Mezzanine stairs and the first restrooms."
         }
     }
     if ( mapping.hasOwnProperty(trackName) ) {
@@ -55,11 +69,16 @@ function trackToRoomElements(trackName) {
     return { full: trackName, tight: trackName, divId: undefined }
 }
 
-function getTrackNameAndRoomHtml(trackName, heading, closeModal) {
+function getTrackNameAndRoomHtml(trackName, heading) {
     /*
      * Returns tight track name and room, within a
-     * html element meant to be .append()ed
+     * html element meant to be .append()ed. Rooms we have a floor plan
+     * for become links that open the room-map popup (see showRoomMap);
+     * without it they still lead to the plan on /map/.
      */
+    if ( !trackName ) {
+        return document.createTextNode("TBD");
+    }
     var elem = trackToRoomElements(trackName);
 
     if ( elem.divId === undefined ) {
@@ -67,17 +86,14 @@ function getTrackNameAndRoomHtml(trackName, heading, closeModal) {
     }
 
     var a = document.createElement("a");
-    a.classList.add("skip-modal");
-    a.href = "#" + elem.divId;
+    a.classList.add("skip-modal", "room-map-link");
+    a.href = "/map/#" + elem.divId;
+    a.dataset.roomMap = trackName;
+    a.title = "Show " + elem.room + " on the map";
     if ( heading ) {
         a.innerText = elem.heading;
     } else {
         a.innerText = elem.tight;
-    }
-
-    if ( closeModal ) {
-        a.setAttribute("data-bs-dismiss", "modal");
-        //a.setAttribute("aria-label", "close");
     }
     return a;
 }
@@ -175,7 +191,7 @@ function addSessionContentToModal(modalBody, session, trackName) {
     const caption = document.createElement("span");
     caption.classList.add("caption");
     caption.innerText = "Track: ";
-    room.append(caption, getTrackNameAndRoom(trackName));
+    room.append(caption, getTrackNameAndRoomHtml(trackName, false));
 
     const captionTime = document.createElement("span");
     captionTime.classList.add("caption");
@@ -303,3 +319,103 @@ function getLinkedInIcon(url, baseUrl) {
 
     return link;
 }
+
+/*
+ * Room-map popup: shows the floor plan for a session's room with the room
+ * highlighted. Plans come from the <template>s in floorplan-templates.html.
+ */
+let roomMapModal;
+
+function showRoomMap(trackName, fromModal) {
+    const elem = trackToRoomElements(trackName);
+    const tpl = document.getElementById("fp-tpl-" + elem.divId);
+    if ( !tpl || typeof bootstrap === "undefined" ) {
+        return false;
+    }
+
+    if ( !roomMapModal ) {
+        const { modal } = createBootstrapModal("roomMapModal", "roomMapLabel");
+        modal.classList.add("room-map-modal");
+        modal.querySelector(".modal-dialog").classList.replace("modal-lg", "modal-xl");
+        modal.addEventListener("shown.bs.modal", centerRoomMapTarget);
+        document.body.append(modal);
+        roomMapModal = modal;
+    }
+
+    const body = roomMapModal.querySelector(".modal-body");
+    body.querySelectorAll(":scope > :not(.btn-close)").forEach(node => node.remove());
+
+    const title = document.createElement("h4");
+    title.id = "roomMapLabel";
+    title.innerText = elem.heading;
+    const floor = document.createElement("span");
+    floor.classList.add("caption");
+    floor.innerText = tpl.dataset.floor;
+    const directions = document.createElement("p");
+    directions.classList.add("room-map-directions");
+    directions.innerText = elem.directions || "";
+    body.append(title, floor, directions, tpl.content.cloneNode(true));
+
+    const svg = body.querySelector("svg.fp");
+    svg.classList.add("fp-focus");
+    const target = svg.querySelector('[data-room="' + elem.room + '"]');
+    if ( target ) {
+        target.classList.add("fp-target");
+    }
+
+    const actions = document.createElement("div");
+    actions.classList.add("room-map-actions");
+    if ( fromModal ) {
+        const back = document.createElement("button");
+        back.type = "button";
+        back.className = "btn btn-outline-secondary btn-sm";
+        back.innerText = "\u2190 Back to session";
+        back.addEventListener("click", () => {
+            roomMapModal.addEventListener("hidden.bs.modal",
+                () => bootstrap.Modal.getOrCreateInstance(fromModal).show(), { once: true });
+            bootstrap.Modal.getInstance(roomMapModal).hide();
+        });
+        actions.append(back);
+    }
+    const all = document.createElement("a");
+    all.href = "/map/";
+    all.innerText = "All floors";
+    actions.append(all);
+    body.append(actions);
+
+    const open = () => bootstrap.Modal.getOrCreateInstance(roomMapModal).show();
+    if ( fromModal ) {
+        // Bootstrap can't stack modals, so close the session first
+        fromModal.addEventListener("hidden.bs.modal", open, { once: true });
+        bootstrap.Modal.getInstance(fromModal).hide();
+    } else {
+        open();
+    }
+    return true;
+}
+
+function centerRoomMapTarget() {
+    // On phones the plan scrolls sideways; bring the room into view
+    const scroller = roomMapModal.querySelector(".fp-scroll");
+    const target = roomMapModal.querySelector(".fp-target");
+    if ( !scroller || !target ) {
+        return;
+    }
+    const s = scroller.getBoundingClientRect();
+    const t = target.getBoundingClientRect();
+    scroller.scrollLeft += (t.left + t.width / 2) - (s.left + s.width / 2);
+}
+
+// Capture phase on window, so this runs before the skip-modal handlers and
+// before Bootstrap's data-bs-toggle handler (itself a capture listener on
+// document) can open the session behind the map
+window.addEventListener("click", event => {
+    const link = event.target.closest("[data-room-map]");
+    if ( !link ) {
+        return;
+    }
+    if ( showRoomMap(link.dataset.roomMap, link.closest(".modal.show")) ) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+}, true);

@@ -81,7 +81,9 @@ Dynamic pages fetch data via the Sessionize API using `fetch()`. The codebase us
 
 **Update track→room mapping**: Edit `trackToRoomElements()` in `js/utils.js`.
 
-**Update venue maps**: The stacked all-floors overview on `/map/` is drawn from `_data/venue_overview.yml` (rough west→east positions, not to scale). Detailed per-floor plan images live in `img/venue/` and are listed under `venueFloorMaps` in `_config.yml`; each floor in the overview links to a plan by its `divId`.
+**Update venue maps**: The stacked all-floors overview on `/map/` is drawn from `_data/venue_overview.yml` (rough west→east positions, not to scale). Each floor's clean plan is an SVG fragment in `_includes/floorplans/`, listed under `venueFloorMaps` in `_config.yml` (`svg`, plus `image` for the original architectural plan in `img/venue/`); `_includes/floorplan-svg.html` wraps a fragment in the shared frame.
+
+**Room-map popup**: Room names in the schedule and session popups open `showRoomMap()` (`js/utils.js`), which clones that floor from the `<template>`s in `_includes/floorplan-templates.html` (included on `/schedule/` and `/speakers/`) and highlights the room. A track's `room` in `trackToRoomElements()` must match a `data-room` attribute in the floor SVG; its `directions` text is shown above the plan.
 
 ---
 

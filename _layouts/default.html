@@ -73,6 +73,7 @@ layout: compress
 
     {% if page.permalink == '/speakers/' %}
         <script src="{{ "/js/schedule.js" | prepend: site.baseurl }}" defer></script>
+        {% include floorplan-templates.html %}
         <script src="{{ "/js/speakers.js" | prepend: site.baseurl }}" defer></script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
@@ -81,6 +82,7 @@ layout: compress
         </script>
     {% elsif page.permalink == '/schedule/' %}
         <script src="{{ "/js/schedule.js" | prepend: site.baseurl }}" defer></script>
+        {% include floorplan-templates.html %}
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 scheduleBuilder("{{ site.sessionizeJsonScheduleGrid }}", "{{ site.baseurl }}", "schedules");
