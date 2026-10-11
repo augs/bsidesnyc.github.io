@@ -81,6 +81,8 @@ Dynamic pages fetch data via the Sessionize API using `fetch()`. The codebase us
 
 **Update track→room mapping**: Edit `trackToRoomElements()` in `js/utils.js`.
 
+**Update venue maps**: The stacked all-floors overview on `/map/` is drawn from `_data/venue_overview.yml` (rough west→east positions, not to scale). Detailed per-floor plan images live in `img/venue/` and are listed under `venueFloorMaps` in `_config.yml`; each floor in the overview links to a plan by its `divId`.
+
 ---
 
 ## Build / local dev
