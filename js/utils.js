@@ -3,7 +3,9 @@ function getSessionizeThumbnail(url, size) {
     return url.replace(/-\d+o\d+o\d+-/, `-${size}o${size}o1-`);
 }
 
-const SPEAKER_PLACEHOLDER = "/img/other/speaker-placeholder.svg";
+// Set by _layouts/default.html; empty when the site is served from the root
+const SITE_BASEURL = window.siteBaseUrl || "";
+const SPEAKER_PLACEHOLDER = SITE_BASEURL + "/img/other/speaker-placeholder.svg";
 
 /*
  * Headshots: try the resized Sessionize thumbnail, then the original, then
@@ -120,7 +122,7 @@ function getTrackNameAndRoomHtml(trackName, heading) {
 
     var a = document.createElement("a");
     a.classList.add("skip-modal", "room-map-link");
-    a.href = "/map/#" + elem.divId;
+    a.href = SITE_BASEURL + "/map/#" + elem.divId;
     a.dataset.roomMap = trackName;
     a.title = "Show " + elem.room + " on the map";
     if ( heading ) {
@@ -464,7 +466,7 @@ function showRoomMap(trackName, fromModal) {
         actions.append(back);
     }
     const all = document.createElement("a");
-    all.href = "/map/";
+    all.href = SITE_BASEURL + "/map/";
     all.innerText = "Full venue map";
     actions.append(all);
     body.append(actions);
