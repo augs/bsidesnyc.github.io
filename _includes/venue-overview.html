@@ -24,7 +24,7 @@
                 <span class="vx-entrance" style="left: {{ floor.entrance.x }}%">&darr; {{ floor.entrance.label }}</span>
                 {% endif %}
                 {% for spot in floor.spots %}
-                <a class="vx-spot vx-{{ spot.kind }}" style="left: {{ spot.x }}%; width: calc({{ spot.w }}% - 4px)" href="{% if spot.link %}{{ site.baseurl }}{{ spot.link }}{% else %}#{{ floor.divId }}{% endif %}">
+                <a class="vx-spot vx-{{ spot.kind }}"{% if spot.room %} data-room="{{ spot.room }}"{% endif %} style="left: {{ spot.x }}%; width: calc({{ spot.w }}% - 4px)" href="{% if spot.link %}{{ site.baseurl }}{{ spot.link }}{% else %}#{{ floor.divId }}{% endif %}">
                     <span class="vx-spot-label">{{ spot.label }}</span>
                     {% if spot.room %}<span class="vx-room">{{ spot.room }}</span>{% endif %}
                 </a>

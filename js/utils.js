@@ -348,15 +348,64 @@ function showRoomMap(trackName, fromModal) {
     const title = document.createElement("h4");
     title.id = "roomMapLabel";
     title.innerText = elem.heading;
-    const floor = document.createElement("span");
-    floor.classList.add("caption");
-    floor.innerText = tpl.dataset.floor;
+    body.append(title);
+
+    /*
+     * Which floor first: the all-floors overview with the room's floor lit,
+     * plus the floors between it and the entrance as the route
+     */
+    const overviewTpl = document.getElementById("vx-tpl");
+    const floor = document.createElement("p");
+    floor.classList.add("room-map-floor");
+    const floorName = document.createElement("strong");
+    floorName.innerText = tpl.dataset.floor;
+    floor.append(floorName);
+    body.append(floor);
+
+    if ( overviewTpl ) {
+        body.append(overviewTpl.content.cloneNode(true));
+        const overview = body.querySelector(".venue-xsection");
+        overview.classList.add("vx-focus");
+        overview.querySelector(".vx-note")?.remove();
+        overview.querySelectorAll("a").forEach(a => a.tabIndex = -1);
+
+        const floors = [...overview.querySelectorAll(".vx-floor")];
+        const spot = overview.querySelector('.vx-spot[data-room="' + elem.room + '"]');
+        const targetIdx = floors.indexOf(spot?.closest(".vx-floor"));
+        const entranceIdx = floors.findIndex(f => f.querySelector(".vx-entrance"));
+        if ( targetIdx >= 0 ) {
+            spot.classList.add("vx-target");
+            floors[targetIdx].classList.add("vx-floor-target");
+            if ( entranceIdx >= 0 ) {
+                const lo = Math.min(targetIdx, entranceIdx), hi = Math.max(targetIdx, entranceIdx);
+                floors.slice(lo, hi + 1).forEach(f => f.classList.add("vx-floor-route"));
+
+                // Floors are listed top to bottom, so a higher index is further down
+                const levels = targetIdx - entranceIdx;
+                const count = Math.abs(levels) === 1 ? "one level" : Math.abs(levels) + " levels";
+                floor.append(" \u00b7 " + (levels === 0
+                    ? "same level as the entrance"
+                    : count + (levels > 0 ? " down" : " up") + " from the entrance"));
+            }
+        }
+    }
+
     const directions = document.createElement("p");
     directions.classList.add("room-map-directions");
     directions.innerText = elem.directions || "";
-    body.append(title, floor, directions, tpl.content.cloneNode(true));
+    body.append(directions);
 
-    const svg = body.querySelector("svg.fp");
+    // Then where on that floor: the plan, open by default only on wide screens
+    const plan = document.createElement("details");
+    plan.classList.add("room-map-plan");
+    plan.open = window.matchMedia("(min-width: 992px)").matches;
+    const summary = document.createElement("summary");
+    summary.innerText = "Floor plan: " + tpl.dataset.floor;
+    plan.append(summary, tpl.content.cloneNode(true));
+    plan.addEventListener("toggle", () => { if ( plan.open ) centerRoomMapTarget(); });
+    body.append(plan);
+
+    const svg = plan.querySelector("svg.fp");
     svg.classList.add("fp-focus");
     const target = svg.querySelector('[data-room="' + elem.room + '"]');
     if ( target ) {
@@ -379,7 +428,7 @@ function showRoomMap(trackName, fromModal) {
     }
     const all = document.createElement("a");
     all.href = "/map/";
-    all.innerText = "All floors";
+    all.innerText = "Full venue map";
     actions.append(all);
     body.append(actions);
 

@@ -184,8 +184,9 @@ $vx-kinds: (
     font-size: 12px;
 }
 
-// Phones / small tablets: drop the positioning and list each floor's spots
-@media (max-width: 991px) {
+// Stacked list: drop the positioning and list each floor's spots under its
+// name. Used on phones / small tablets, and by the room-map popup when narrow.
+@mixin vx-list-layout {
     .vx-compass, .vx-elevators, .vx-stairs { display: none; }
     .vx-floor { flex-direction: column; }
     .vx-floor-label { flex-basis: auto; padding-bottom: 8px; }
@@ -214,6 +215,10 @@ $vx-kinds: (
         border-radius: 6px;
         text-align: center;
     }
+}
+
+@media (max-width: 991px) {
+    @include vx-list-layout;
 }
 
 // Detailed floor plans: inline SVG drawings (_includes/floorplans/)
@@ -320,10 +325,54 @@ svg.fp.fp-focus {
     svg.fp.fp-focus .fp-target rect { animation: none; }
 }
 .room-map-modal {
-    .caption { color: $color-text-muted; }
+    .room-map-floor {
+        margin: 4px 0 10px;
+        color: $color-text-secondary;
+        font-size: 16px;
+        strong {
+            color: $color-text-heading;
+            font-size: 20px;
+            font-weight: $fw-extra-bold;
+        }
+    }
     .room-map-directions {
-        margin: 8px 0 14px;
+        margin: 12px 0 14px;
         font-size: 15px;
+    }
+    // The popup has its own directions line, so slim the overview down
+    .venue-xsection {
+        margin: 0;
+        a { pointer-events: none; }
+        .vx-how { display: none; }
+        @media (min-width: 1200px) {
+            .vx-compass { margin-left: 130px; }
+            .vx-floor-label {
+                flex-basis: 130px;
+                align-items: center;
+                .vx-name { font-size: 15px; }
+            }
+            .vx-spot {
+                padding: 4px 3px;
+                font-size: 12px;
+            }
+        }
+        // Too narrow for positions: stack it, and only the floors on the way
+        // there keep their rooms
+        @media (max-width: 1199px) {
+            @include vx-list-layout;
+            .vx-floor:not(.vx-floor-route) {
+                .vx-lane { display: none; }
+                .vx-floor-label { padding: 6px 0; }
+                .vx-code { min-width: 30px; height: 30px; line-height: 30px; font-size: 14px; }
+            }
+        }
+    }
+    .room-map-plan {
+        summary {
+            cursor: pointer;
+            font-weight: $fw-extra-bold;
+        }
+        .fp-scroll { margin-top: 10px; }
     }
     .room-map-actions {
         display: flex;
@@ -337,4 +386,28 @@ svg.fp.fp-focus {
 .room-map-link {
     text-decoration: underline dotted;
     text-underline-offset: 3px;
+}
+
+// Room-map popup, overview: light the room's floor and the route to it
+.venue-xsection.vx-focus {
+    .vx-floor { transition: none; }
+    .vx-floor:not(.vx-floor-route) { opacity: .3; }
+    .vx-floor-route:not(.vx-floor-target) .vx-spot { opacity: .45; }
+    .vx-floor-target {
+        background: #fff8e1;
+        box-shadow: inset 4px 0 0 $color-text-heading;
+        .vx-spot:not(.vx-target) { opacity: .4; }
+    }
+    .vx-target {
+        z-index: 2;
+        outline: 4px solid $color-text-heading;
+        outline-offset: 2px;
+        animation: vx-pulse 1.6s ease-in-out infinite;
+    }
+}
+@keyframes vx-pulse {
+    50% { outline-offset: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .venue-xsection.vx-focus .vx-target { animation: none; }
 }
