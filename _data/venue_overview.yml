@@ -24,10 +24,10 @@ floors:
       - {label: "Hands-On Villages", kind: village, x: 5, w: 14, link: "/villages/"}
       - {label: "CTFs", kind: ctf, x: 22, w: 13, link: "/ctf/"}
 
-  - name: Hound Square
+  - name: 1st Floor (Hound Square)
     code: "1"
     divId: map-1
-    how: 1st floor. Stairs up from the Mezzanine.
+    how: Stairs up from the Mezzanine.
     stairsDown: 39
     spots:
       - {label: "Career Center & Affinity Villages", kind: village, x: 23, w: 14, link: "/villages/"}
@@ -35,13 +35,13 @@ floors:
   - name: Mezzanine
     code: "M"
     divId: map-l
-    how: Half a flight up from the Floor L lobby.
+    how: Half a flight up from the Level 1 lobby.
     stairsDown: 61.5
     spots:
       - {label: "Lunch & T-Shirts", kind: food, x: 41, w: 9}
       - {label: "Sponsors", kind: sponsor, x: 51, w: 8, link: "/sponsors/"}
 
-  - name: Floor L (Main Entrance)
+  - name: Level 1
     code: "L"
     divId: map-l
     how: Enter from 59th St. Registration and Info are just inside.
@@ -57,7 +57,7 @@ floors:
   - name: Lower Level
     code: "L2"
     divId: map-l2
-    how: Stairs down from the Floor L lobby, or elevators.
+    how: Stairs down from the Level 1 lobby, or elevators.
     spots:
       - {label: "Blue", room: "L2.84", kind: tech-blue, x: 40, w: 10}
       - {label: "Other", room: "L2.85", kind: tech-other, x: 51, w: 9}

@@ -66,35 +66,35 @@ function trackToRoomElements(trackName) {
             tight: "Red (L.63)",
             room: "L.63",
             divId: "map-l",
-            directions: "Floor L, at the east end near the 59th St entrance. The large room next to Workshops (L.61)."
+            directions: "Level 1 (L), at the east end near the 59th St entrance. The large room next to Workshops (L.61)."
         },
         "Tech - Blue": {
             heading: "Tech - Blue (L2.84)",
             tight: "Blue (L2.84)",
             room: "L2.84",
             divId: "map-l2",
-            directions: "Take the stairs by the Info booth down to the Lower Level. L2.84 is at the bottom of the stairs, next to L2.85."
+            directions: "Take the stairs by the Info booth down to the Lower Level (L2). L2.84 is at the bottom of the stairs, next to L2.85."
         },
         "Tech - Other": {
             heading: "Tech - Other (L2.85)",
             tight: "Other (L2.85)",
             room: "L2.85",
             divId: "map-l2",
-            directions: "Take the stairs by the Info booth down to the Lower Level. L2.85 is right at the bottom of the stairs, next to L2.84."
+            directions: "Take the stairs by the Info booth down to the Lower Level (L2). L2.85 is right at the bottom of the stairs, next to L2.84."
         },
         "Workshop": {
             heading: "Workshop (L.61)",
             tight: "Workshop (L.61)",
             room: "L.61",
             divId: "map-l",
-            directions: "Floor L, at the east end near the 59th St entrance, next to the Keynote room (L.63)."
+            directions: "Level 1 (L), at the east end near the 59th St entrance, next to the Keynote room (L.63)."
         },
         "Entrepreneur": {
             heading: "Entrepreneur (L.76)",
             tight: "Entrepreneur (L.76)",
             room: "L.76",
             divId: "map-l",
-            directions: "Floor L. Head west along the main concourse, away from the entrance; L.76 is past the Mezzanine stairs and the first restrooms."
+            directions: "Level 1 (L). Head west along the main concourse, away from the 59th St entrance; L.76 is past the Mezzanine stairs and the first restrooms."
         }
     }
     if ( mapping.hasOwnProperty(trackName) ) {
@@ -422,10 +422,12 @@ function showRoomMap(trackName, fromModal) {
                 // Floors are listed top to bottom, so a higher index is further down
                 const levels = targetIdx - entranceIdx;
                 const count = Math.abs(levels) === 1 ? "one level" : Math.abs(levels) + " levels";
-                // On the entrance floor its name already says so
-                if ( levels !== 0 ) {
-                    floor.append(" \u00b7 " + count + (levels > 0 ? " down" : " up") + " from the entrance");
-                }
+                // e.g. "one level down from the 59th St entrance"
+                const entrance = floors[entranceIdx].querySelector(".vx-entrance")
+                    .textContent.replace(/^\W+/, "").replace(/ Entrance$/, " entrance");
+                floor.append(" \u00b7 " + (levels === 0
+                    ? "same level as the " + entrance
+                    : count + (levels > 0 ? " down" : " up") + " from the " + entrance));
             }
         }
     }
