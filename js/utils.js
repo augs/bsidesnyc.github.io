@@ -3,6 +3,39 @@ function getSessionizeThumbnail(url, size) {
     return url.replace(/-\d+o\d+o\d+-/, `-${size}o${size}o1-`);
 }
 
+const SPEAKER_PLACEHOLDER = "/img/other/speaker-placeholder.svg";
+
+/*
+ * Headshots: try the resized Sessionize thumbnail, then the original, then
+ * the placeholder. Each step is logged so a broken headshot can be traced
+ * to a missing photo vs. a URL that won't load. With lazy, the URL goes in
+ * data-src for scripts.js to load when the modal opens.
+ */
+function setSpeakerHeadshot(img, url, size, lazy) {
+    const name = img.alt || "a speaker";
+    const sources = [];
+    if ( url ) {
+        const thumb = size ? getSessionizeThumbnail(url, size) : url;
+        sources.push(thumb);
+        if ( thumb !== url ) sources.push(url);
+    } else {
+        console.warn("No headshot in Sessionize for " + name + "; using placeholder");
+    }
+    sources.push(SPEAKER_PLACEHOLDER);
+
+    img.onerror = () => {
+        const failed = sources.shift();
+        console.warn("Headshot for " + name + " failed to load: " + failed);
+        if ( sources.length ) img.src = sources[0];
+    };
+    img.classList.toggle("is-placeholder", !url);
+    if ( lazy && !img.getAttribute("src") ) {
+        img.dataset.src = sources[0];
+    } else {
+        img.src = sources[0];
+    }
+}
+
 /*
  * Sessionize's grid export ("Use UTC timezone for schedule") returns
  * date/time strings with no offset (e.g. "2026-10-17T10:00:00") whose
@@ -229,8 +262,12 @@ function addSpeakerContentToModal(modalBody, speaker, baseUrl) {
     // Modals are built up front but stay hidden until clicked - stash the
     // URL in data-src rather than src so the browser doesn't fetch it
     // until the modal is actually opened (see show.bs.modal in scripts.js).
-    if (speaker.profilePicture) {
-        speakerHeadshot.dataset.src = speaker.profilePicture;
+    if ( "profilePicture" in speaker ) {
+        setSpeakerHeadshot(speakerHeadshot, speaker.profilePicture, 0, true);
+    } else {
+        // Schedule-grid speakers carry no photo; backfillSpeakerDetails
+        // (schedule.js) swaps in the real one once the speaker list loads
+        speakerHeadshot.dataset.src = SPEAKER_PLACEHOLDER;
     }
     headshot.append(speakerHeadshot);
     row.append(headshot);

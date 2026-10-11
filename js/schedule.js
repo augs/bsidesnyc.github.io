@@ -482,14 +482,12 @@ function backfillSpeakerDetails(speakers, baseUrl) {
 
         /*
          * Backfill items on the modals. The headshot only gets a data-src
-         * here (never src) so it doesn't fetch until its modal is opened -
-         * see the show.bs.modal handler in scripts.js.
+         * here (src only if its modal was already opened) so it doesn't
+         * fetch until the modal opens - see show.bs.modal in scripts.js.
          */
         waitForElm("#speakerProfileUrl-" + speaker.id, speaker).then(([elements, speaker]) => {
             elements.forEach(element => {
-                if ( speaker.profilePicture != null ) {
-                    element.dataset.src = speaker.profilePicture;
-                }
+                setSpeakerHeadshot(element, speaker.profilePicture, 0, true);
             });
         });
         waitForElm("#speakerTagLine-" + speaker.id, speaker).then(([elements, speaker]) => {
