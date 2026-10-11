@@ -14,7 +14,8 @@ $vx-kinds: (
     ctf: (#37474f, #fff),
     food: (#ef6c00, #fff),
     sponsor: (#546e7a, #fff),
-    info: (#c2185b, #fff)
+    info: (#c2185b, #fff),
+    registration: (#00838f, #fff)
 );
 
 .venue-xsection {
@@ -215,14 +216,88 @@ $vx-kinds: (
     }
 }
 
-// Detailed floor plans
+// Detailed floor plans: inline SVG drawings (_includes/floorplans/)
 .venue-map-heading {
     margin-top: 30px;
     scroll-margin-top: 80px;
 }
-.venue-map {
+.floorplan {
+    margin: 0;
+    figcaption {
+        margin-top: 6px;
+        color: $color-text-muted;
+        font-size: 12px;
+        text-align: right;
+    }
+    .fp-hint { display: none; float: left; }
+    @media (max-width: 640px) {
+        .fp-hint { display: inline; }
+    }
+}
+// Below ~600px the labels get too small, so let the plan scroll sideways
+.fp-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+svg.fp {
+    display: block;
     width: 100%;
+    min-width: 600px;
     height: auto;
-    border: 1px solid $vx-line;
-    border-radius: 6px;
+    font-family: inherit;
+    text {
+        text-anchor: middle;
+        dominant-baseline: central;
+        font-size: 24px;
+        font-weight: 700;
+        fill: #fff;
+    }
+    .fp-sub { font-size: 19px; font-weight: 500; }
+    .fp-md { font-size: 21px; }
+    .fp-sm { font-size: 17px; }
+    .fp-muted { fill: $color-text-muted; font-weight: 500; }
+    .fp-street {
+        fill: $color-text-muted;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+    .fp-compass {
+        path, text { fill: $color-text-heading; }
+        text { font-size: 18px; }
+    }
+    .fp-bldg { fill: #eceff1; }
+    .fp-outline { fill: none; stroke: #37474f; stroke-width: 3; }
+    .fp-hall { fill: #fff; }
+    .fp-void { fill: #f7f9fa; stroke: #b0bec5; stroke-width: 2; stroke-dasharray: 8 6; }
+    .fp-elev {
+        rect { fill: #ffe082; stroke: #f9a825; stroke-width: 2; }
+        text { fill: #5d4037; font-size: 16px; }
+    }
+    .fp-wc {
+        rect { fill: #c5cae9; stroke: #5c6bc0; stroke-width: 2; }
+        text { fill: #283593; font-size: 16px; }
+    }
+    .fp-mezz {
+        rect { fill: #fff3e0; stroke: #ef6c00; stroke-width: 2; stroke-dasharray: 6 4; }
+        text { fill: #e65100; font-size: 19px; }
+        .fp-sub { font-size: 16px; }
+    }
+    .fp-stairs {
+        circle { fill: #fff; stroke: $color-text-heading; stroke-width: 3; }
+        polyline { fill: none; stroke: $color-text-heading; stroke-width: 3.5; stroke-linejoin: round; }
+        text { fill: $color-text-heading; font-size: 15px; font-weight: 600; }
+    }
+    .fp-entrance {
+        path { fill: none; stroke: $track-color-tech-red; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+        text { fill: $track-color-tech-red; font-size: 16px; }
+    }
+    @each $kind, $colors in $vx-kinds {
+        .fp-#{$kind} {
+            rect { fill: nth($colors, 1); }
+            text { fill: nth($colors, 2); }
+        }
+    }
+    a.fp-room:hover rect, a.fp-room:focus rect { filter: brightness(1.12); }
 }
