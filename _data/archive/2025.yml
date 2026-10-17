@@ -1004,7 +1004,7 @@ schedule:
     techniques that maintain data confidentiality. Through real-world case studies, this presentation will demonstrate how
     this approach fundamentally transforms mobile security operations by revealing hidden threats while making complex technical
     findings universally accessible.
-  type: break
+  type: talk
   slides_url: null
   video_url: https://www.youtube.com/watch?v=4taQFPtehHg
   recorded: true
