@@ -1,3 +1,7 @@
+# Optional per-session buttons on /archive/, shown after Slides/Watch:
+#   links:
+#   - label: Lab Guide
+#     url: https://example.com/lab
 conference:
   name: BSidesNYC
   edition: '0x06'
@@ -173,6 +177,7 @@ schedule:
   slides_url: null
   video_url: null
   recorded: null
+  links: []
 - time_start: '10:30'
   time_end: '10:55'
   track: Tech - Other
@@ -467,6 +472,7 @@ schedule:
   slides_url: null
   video_url: null
   recorded: null
+  links: []
 - time_start: '12:30'
   time_end: '12:55'
   track: Entrepreneur
@@ -719,6 +725,7 @@ schedule:
   slides_url: null
   video_url: null
   recorded: null
+  links: []
 - time_start: '13:30'
   time_end: '13:55'
   track: Tech - Other
@@ -1044,6 +1051,7 @@ schedule:
   slides_url: null
   video_url: null
   recorded: null
+  links: []
 - time_start: '16:00'
   time_end: '16:25'
   track: Entrepreneur
